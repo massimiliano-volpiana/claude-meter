@@ -37,16 +37,16 @@ build:
 
 	@echo "→ Building app icon..."
 	@mkdir -p /tmp/ClaudeMeter.iconset
-	@cp icon_pngs/icon_16.png   /tmp/ClaudeMeter.iconset/icon_16x16.png
-	@cp icon_pngs/icon_32.png   /tmp/ClaudeMeter.iconset/icon_16x16@2x.png
-	@cp icon_pngs/icon_32.png   /tmp/ClaudeMeter.iconset/icon_32x32.png
-	@cp icon_pngs/icon_64.png   /tmp/ClaudeMeter.iconset/icon_32x32@2x.png
-	@cp icon_pngs/icon_128.png  /tmp/ClaudeMeter.iconset/icon_128x128.png
-	@cp icon_pngs/icon_256.png  /tmp/ClaudeMeter.iconset/icon_128x128@2x.png
-	@cp icon_pngs/icon_256.png  /tmp/ClaudeMeter.iconset/icon_256x256.png
-	@cp icon_pngs/icon_512.png  /tmp/ClaudeMeter.iconset/icon_256x256@2x.png
-	@cp icon_pngs/icon_512.png  /tmp/ClaudeMeter.iconset/icon_512x512.png
-	@cp icon_pngs/icon_1024.png /tmp/ClaudeMeter.iconset/icon_512x512@2x.png
+	@cp Sources/ClaudeMeter/Assets.xcassets/AppIcon.appiconset/icon_16.png   /tmp/ClaudeMeter.iconset/icon_16x16.png
+	@cp Sources/ClaudeMeter/Assets.xcassets/AppIcon.appiconset/icon_32.png   /tmp/ClaudeMeter.iconset/icon_16x16@2x.png
+	@cp Sources/ClaudeMeter/Assets.xcassets/AppIcon.appiconset/icon_32.png   /tmp/ClaudeMeter.iconset/icon_32x32.png
+	@cp Sources/ClaudeMeter/Assets.xcassets/AppIcon.appiconset/icon_64.png   /tmp/ClaudeMeter.iconset/icon_32x32@2x.png
+	@cp Sources/ClaudeMeter/Assets.xcassets/AppIcon.appiconset/icon_128.png  /tmp/ClaudeMeter.iconset/icon_128x128.png
+	@cp Sources/ClaudeMeter/Assets.xcassets/AppIcon.appiconset/icon_256.png  /tmp/ClaudeMeter.iconset/icon_128x128@2x.png
+	@cp Sources/ClaudeMeter/Assets.xcassets/AppIcon.appiconset/icon_256.png  /tmp/ClaudeMeter.iconset/icon_256x256.png
+	@cp Sources/ClaudeMeter/Assets.xcassets/AppIcon.appiconset/icon_512.png  /tmp/ClaudeMeter.iconset/icon_256x256@2x.png
+	@cp Sources/ClaudeMeter/Assets.xcassets/AppIcon.appiconset/icon_512.png  /tmp/ClaudeMeter.iconset/icon_512x512.png
+	@cp Sources/ClaudeMeter/Assets.xcassets/AppIcon.appiconset/icon_1024.png /tmp/ClaudeMeter.iconset/icon_512x512@2x.png
 	@iconutil -c icns /tmp/ClaudeMeter.iconset -o $(RESOURCES)/AppIcon.icns
 
 	@echo "→ Signing widget..."
