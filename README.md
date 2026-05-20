@@ -22,7 +22,6 @@
 - 📊 Segmented usage bars with color coding (green → yellow → orange → red)
 - 🔄 Auto-refresh every 1, 2, 5, or 15 minutes
 - 🖱️ Right-click for quick Refresh / Settings / Quit
-- 🔗 "Open Claude" launches the Claude desktop app or browser
 - 📐 Notification Center widget (small & medium)
 - 🔑 Session key stored securely in Keychain
 
