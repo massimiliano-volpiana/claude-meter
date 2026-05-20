@@ -1,0 +1,26 @@
+# Swift build
+.build/
+*.o
+*.d
+
+# Xcode
+*.xcodeproj/
+*.xcworkspace/
+xcuserdata/
+DerivedData/
+
+# Temp icon PNGs used during build
+icon_pngs/
+
+# macOS
+.DS_Store
+
+# Claude Code
+.claude/
+
+# Scripts and temp files
+export.sh
+setup.sh
+test_api.py
+project.yml
+*.zip
