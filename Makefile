@@ -1,7 +1,7 @@
 TEAM_ID      := 8KZ465VM76
 BUNDLE_ID    := it.inrisalto.ClaudeMeter
 CONFIG       ?= release
-BUILD        := .build/$(CONFIG)
+BUILD        := .build/apple/Products/Release
 
 APP          := $(BUILD)/ClaudeMeter.app
 CONTENTS     := $(APP)/Contents
@@ -17,8 +17,8 @@ SIGN_ID      := $(shell security find-identity -v -p codesigning 2>/dev/null \
 # ── Build & bundle ─────────────────────────────────────────────────────────────
 
 build:
-	@echo "→ Compiling Swift sources..."
-	swift build -c $(CONFIG)
+	@echo "→ Compiling Swift sources (universal)..."
+	swift build -c $(CONFIG) --arch arm64 --arch x86_64
 
 	@echo "→ Creating bundle structure..."
 	mkdir -p $(MACOS) $(RESOURCES)
@@ -66,4 +66,4 @@ install: build
 
 clean:
 	swift package clean
-	rm -rf $(BUILD)/ClaudeMeter.app
+	rm -rf .build/apple $(BUILD)/ClaudeMeter.app
