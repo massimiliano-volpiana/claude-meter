@@ -77,8 +77,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             .sink { [weak self] limits in
                 guard let self else { return }
                 self.statusItem.button?.image = self.drawBars(limits)
-                let text = limits.map { String(format: "%.0f%%", $0.percent) }.joined(separator: " · ")
-                self.statusItem.button?.title = limits.isEmpty ? "  --" : "  \(text)"
+                let text = limits.isEmpty ? "  --" : "  \(limits.map { String(format: "%.0f%%", $0.percent) }.joined(separator: " · "))"
+                let attrs: [NSAttributedString.Key: Any] = [
+                    .font: NSFont.systemFont(ofSize: NSFont.systemFontSize, weight: .semibold),
+                    .foregroundColor: NSColor.labelColor
+                ]
+                self.statusItem.button?.attributedTitle = NSAttributedString(string: text, attributes: attrs)
             }
             .store(in: &cancellables)
     }
@@ -89,9 +93,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let cellH: CGFloat = 5
         let cellGap: CGFloat = 1.5
         let rowGap: CGFloat  = 3
-        let rows   = min(limits.count, 2)
+        let rows   = max(min(limits.count, 2), 1)
         let totalW = CGFloat(cells) * cellW + CGFloat(cells - 1) * cellGap
-        let totalH = rows == 0 ? cellH : CGFloat(rows) * cellH + CGFloat(rows - 1) * rowGap
+        let totalH = CGFloat(rows) * cellH + CGFloat(rows - 1) * rowGap
 
         let img = NSImage(size: NSSize(width: totalW, height: totalH), flipped: false) { _ in
             for (row, limit) in Array(limits.prefix(2)).enumerated() {
@@ -99,29 +103,34 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 let partial   = (limit.percent / 10.0) - Double(fullCells)
                 let y = totalH - cellH - CGFloat(row) * (cellH + rowGap)
                 let color = self.segmentColor(limit.percent)
+                // celle vuote: labelColor adattivo (bianco su dark, nero su light)
+                // alpha 0.30 = struttura visibile anche quando la menu bar è dimmed
+                let emptyColor = NSColor.labelColor.withAlphaComponent(0.30)
 
                 for col in 0..<cells {
                     let x = CGFloat(col) * (cellW + cellGap)
                     let rect = NSRect(x: x, y: y, width: cellW, height: cellH)
+                    let path = NSBezierPath(roundedRect: rect, xRadius: 1, yRadius: 1)
 
                     if col < fullCells {
-                        let path = NSBezierPath(roundedRect: rect, xRadius: 1, yRadius: 1)
-                        color.setFill(); path.fill()
-                    } else if col == fullCells && partial > 0 {
-                        let bg = NSBezierPath(roundedRect: rect, xRadius: 1, yRadius: 1)
-                        NSColor.white.withAlphaComponent(0.15).setFill(); bg.fill()
-                        let fillRect = NSRect(x: x, y: y, width: max(1, cellW * CGFloat(partial)), height: cellH)
-                        let fill = NSBezierPath(roundedRect: fillRect, xRadius: 1, yRadius: 1)
-                        color.setFill(); fill.fill()
+                        color.setFill()
+                        path.fill()
+                    } else if col == fullCells && partial > 0.05 {
+                        // cella parziale: sfondo vuoto + fill proporzionale alla larghezza
+                        emptyColor.setFill(); path.fill()
+                        let fillW = max(1, cellW * CGFloat(partial))
+                        let fillRect = NSRect(x: x, y: y, width: fillW, height: cellH)
+                        let fillPath = NSBezierPath(roundedRect: fillRect, xRadius: 1, yRadius: 1)
+                        color.setFill(); fillPath.fill()
                     } else {
-                        let path = NSBezierPath(roundedRect: rect, xRadius: 1, yRadius: 1)
-                        NSColor.white.withAlphaComponent(0.15).setFill(); path.fill()
+                        emptyColor.setFill()
+                        path.fill()
                     }
                 }
             }
             return true
         }
-        img.isTemplate = false
+        img.isTemplate = false  // mantiene i colori
         return img
     }
 
