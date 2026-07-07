@@ -28,6 +28,14 @@ final class UsageService: ObservableObject {
         }
     }
 
+    @Published var showPercentageText: Bool = (UserDefaults.standard.object(forKey: "showPercentageText") as? Bool) ?? true {
+        didSet { UserDefaults.standard.set(showPercentageText, forKey: "showPercentageText") }
+    }
+
+    @Published var compactBars: Bool = UserDefaults.standard.bool(forKey: "compactBars") {
+        didSet { UserDefaults.standard.set(compactBars, forKey: "compactBars") }
+    }
+
     // MARK: - Private
 
     private var orgID: String?

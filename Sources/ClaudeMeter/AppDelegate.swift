@@ -72,35 +72,45 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     private func bindMenuBarText() {
-        usageService.$limits
+        Publishers.CombineLatest3(usageService.$limits, usageService.$showPercentageText, usageService.$compactBars)
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] limits in
+            .sink { [weak self] limits, showPercentageText, compactBars in
                 guard let self else { return }
-                self.statusItem.button?.image = self.drawBars(limits)
-                let text = limits.isEmpty ? "  --" : "  \(limits.map { String(format: "%.0f%%", $0.percent) }.joined(separator: " · "))"
-                let attrs: [NSAttributedString.Key: Any] = [
-                    .font: NSFont.systemFont(ofSize: NSFont.systemFontSize, weight: .semibold),
-                    .foregroundColor: NSColor.labelColor
-                ]
-                self.statusItem.button?.attributedTitle = NSAttributedString(string: text, attributes: attrs)
+                self.statusItem.button?.image = self.drawBars(limits, compact: compactBars)
+
+                if showPercentageText {
+                    let text = limits.isEmpty ? "  --" : "  \(limits.map { String(format: "%.0f%%", $0.percent) }.joined(separator: " · "))"
+                    let attrs: [NSAttributedString.Key: Any] = [
+                        .font: NSFont.systemFont(ofSize: NSFont.systemFontSize, weight: .semibold),
+                        .foregroundColor: NSColor.labelColor
+                    ]
+                    self.statusItem.button?.attributedTitle = NSAttributedString(string: text, attributes: attrs)
+                } else {
+                    self.statusItem.button?.attributedTitle = NSAttributedString(string: "")
+                }
+
+                self.statusItem.button?.toolTip = limits.isEmpty ? nil :
+                    limits.map { "\($0.label): \(String(format: "%.0f%%", $0.percent))" }.joined(separator: "\n")
             }
             .store(in: &cancellables)
     }
 
-    private func drawBars(_ limits: [UsageLimit]) -> NSImage {
-        let cells    = 10
-        let cellW: CGFloat = 5
-        let cellH: CGFloat = 5
+    private func drawBars(_ limits: [UsageLimit], compact: Bool) -> NSImage {
+        let cells    = compact ? 5 : 10
+        let cellW: CGFloat = compact ? 7 : 5
+        let cellH: CGFloat = compact ? 6 : 5
         let cellGap: CGFloat = 1.5
         let rowGap: CGFloat  = 3
         let rows   = max(min(limits.count, 2), 1)
         let totalW = CGFloat(cells) * cellW + CGFloat(cells - 1) * cellGap
         let totalH = CGFloat(rows) * cellH + CGFloat(rows - 1) * rowGap
 
+        let pctPerCell = 100.0 / Double(cells)
+
         let img = NSImage(size: NSSize(width: totalW, height: totalH), flipped: false) { _ in
             for (row, limit) in Array(limits.prefix(2)).enumerated() {
-                let fullCells = Int(limit.percent / 10.0)
-                let partial   = (limit.percent / 10.0) - Double(fullCells)
+                let fullCells = Int(limit.percent / pctPerCell)
+                let partial   = (limit.percent / pctPerCell) - Double(fullCells)
                 let y = totalH - cellH - CGFloat(row) * (cellH + rowGap)
                 let color = self.segmentColor(limit.percent)
                 // celle vuote: labelColor adattivo (bianco su dark, nero su light)

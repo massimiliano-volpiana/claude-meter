@@ -46,6 +46,26 @@ struct SettingsView: View {
 
             Divider().padding(.horizontal, 18)
 
+            // Menu bar appearance
+            group {
+                sectionHeader("Menu Bar")
+                Toggle("Show percentage text", isOn: Binding(
+                    get: { service.showPercentageText },
+                    set: { service.showPercentageText = $0 }
+                ))
+                Picker("", selection: Binding(
+                    get: { service.compactBars },
+                    set: { service.compactBars = $0 }
+                )) {
+                    Text("Standard").tag(false)
+                    Text("Compact").tag(true)
+                }
+                .pickerStyle(.segmented)
+                .labelsHidden()
+            }
+
+            Divider().padding(.horizontal, 18)
+
             // Refresh
             group {
                 sectionHeader("Auto-refresh")

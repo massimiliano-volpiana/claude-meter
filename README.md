@@ -20,6 +20,7 @@
 
 - 🟠 Menu bar icon with live usage percentage
 - 📊 Segmented usage bars with color coding (green → yellow → orange → red)
+- 📐 Adjustable bar size (Standard or Compact) and optional percentage text, for a tidier menu bar
 - 🔄 Auto-refresh every 1, 2, 5, or 15 minutes
 - 🖱️ Right-click for quick Refresh / Settings / Quit
 - 🔑 Session key stored securely in Keychain
@@ -28,7 +29,7 @@
 
 ### Download (recommended)
 
-1. Download **ClaudeMeter-v1.0.zip** from the [latest release](https://github.com/massimiliano-volpiana/claude-meter/releases/latest)
+1. Download the zip from the [latest release](https://github.com/massimiliano-volpiana/claude-meter/releases/latest)
 2. Unzip and drag **ClaudeMeter.app** to your `/Applications` folder
 3. Open it — the first time macOS will block it (not notarized). To allow it:
    **System Settings → Privacy & Security** → scroll down → click **"Open Anyway"**
