@@ -59,4 +59,4 @@ make install
 
 ## License
 
-MIT
+[MIT](LICENSE)
